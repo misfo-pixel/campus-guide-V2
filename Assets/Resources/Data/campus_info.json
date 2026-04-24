@@ -1,0 +1,104 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-04-05",
+  "campus": "University of Minnesota Twin Cities",
+  "buildings": [
+    {
+      "building_id": "keller_hall",
+      "name": "Keller Hall",
+      "aliases": [
+        "Keller",
+        "Keller Hall",
+        "Keller Hall UMN"
+      ],
+      "campus_area": "East Bank",
+      "category": "Academic Building",
+      "description": "A major academic building commonly associated with computer science and engineering classes.",
+      "common_uses": [
+        "Computer science lectures",
+        "Engineering classes",
+        "Student office hours"
+      ],
+      "info_points": [
+        {
+          "zone_id": "keller_hall_main_corridor",
+          "title": "Keller Hall",
+          "description": "You are in the main Keller Hall corridor near several classrooms.",
+          "semantic_label": "hallway near classrooms"
+        },
+        {
+          "zone_id": "keller_3_180_door",
+          "title": "Classroom Entrance",
+          "description": "You are near classroom 3-180 in Keller Hall.",
+          "semantic_label": "classroom entrance"
+        }
+      ],
+      "rooms": [
+        {
+          "room_id": "keller_3_180",
+          "room_name": "3-180",
+          "type": "Classroom",
+          "description": "A classroom that can be used for lectures and student presentations.",
+          "notes": [
+            "Check course schedule before class.",
+            "This room is used in the demo as the target classroom."
+          ]
+        },
+        {
+          "room_id": "keller_lobby",
+          "room_name": "Lobby",
+          "type": "Lobby",
+          "description": "Main entrance and open gathering area for visitors and students."
+        }
+      ]
+    },
+    {
+      "building_id": "moos_tower",
+      "name": "Moos Tower",
+      "aliases": [
+        "Moos",
+        "Moos Tower"
+      ],
+      "campus_area": "East Bank",
+      "category": "Academic / Services Building",
+      "description": "A large campus building that students often find confusing during their first visits.",
+      "common_uses": [
+        "Classes",
+        "Student services",
+        "Appointments"
+      ],
+      "info_points": [
+        {
+          "zone_id": "moos_lobby_info_zone",
+          "title": "Moos Tower Lobby",
+          "description": "You are near the main Moos Tower lobby information area.",
+          "semantic_label": "information point"
+        }
+      ],
+      "rooms": [
+        {
+          "room_id": "moos_lobby",
+          "room_name": "Lobby",
+          "type": "Lobby",
+          "description": "Main lobby and service area."
+        }
+      ]
+    }
+  ],
+  "public_events": [
+    {
+      "event_id": "cs_guest_talk_01",
+      "title": "Computer Science Guest Talk",
+      "location": "Keller Hall",
+      "time": "2026-04-08T16:00:00",
+      "summary": "A guest speaker event for students interested in AI and systems."
+    },
+    {
+      "event_id": "student_success_workshop_01",
+      "title": "Student Success Workshop",
+      "location": "Moos Tower",
+      "time": "2026-04-10T13:00:00",
+      "summary": "A workshop about campus resources and academic planning."
+    }
+  ]
+}

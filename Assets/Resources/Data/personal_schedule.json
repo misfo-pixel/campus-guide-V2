@@ -1,0 +1,64 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-04-05",
+  "profile": {
+    "user_id": "demo_user_umn_sprite",
+    "display_name": "Demo Student",
+    "home_campus_area": "East Bank",
+    "preferences": {
+      "language": "English",
+      "interaction_style": "brief_helpful",
+      "show_next_class_first": true
+    }
+  },
+  "today_schedule": [
+    {
+      "item_id": "class_001",
+      "type": "class",
+      "title": "CSCI Lecture",
+      "building_id": "keller_hall",
+      "room_id": "keller_3_180",
+      "start_time": "2026-04-05T14:00:00",
+      "end_time": "2026-04-05T15:15:00",
+      "summary": "Your next class is in Keller Hall room 3-180."
+    },
+    {
+      "item_id": "office_hours_001",
+      "type": "office_hours",
+      "title": "Professor Office Hours",
+      "building_id": "keller_hall",
+      "room_id": "keller_lobby",
+      "start_time": "2026-04-05T16:00:00",
+      "end_time": "2026-04-05T17:00:00",
+      "summary": "Office hours are later this afternoon in Keller Hall."
+    }
+  ],
+  "upcoming_tasks": [
+    {
+      "task_id": "hw_001",
+      "title": "Project milestone presentation",
+      "due_time": "2026-04-07T23:59:00",
+      "course": "CS Project Studio",
+      "priority": "high"
+    },
+    {
+      "task_id": "hw_002",
+      "title": "Prepare updated MR demo video",
+      "due_time": "2026-04-08T20:00:00",
+      "course": "Independent Project",
+      "priority": "medium"
+    }
+  ],
+  "demo_context_examples": [
+    {
+      "trigger_zone": "keller_hall_main_corridor",
+      "suggested_user_query": "Where is my next class?",
+      "expected_context_summary": "The user is near Keller Hall and has a class in room 3-180 at 2:00 PM."
+    },
+    {
+      "trigger_zone": "keller_3_180_door",
+      "suggested_user_query": "Am I in the right place?",
+      "expected_context_summary": "The user is near the classroom entrance and should be told this is room 3-180."
+    }
+  ]
+}
