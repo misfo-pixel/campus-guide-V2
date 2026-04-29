@@ -7,7 +7,8 @@ public enum SpriteMode
     Greeting,
     Info,
     Navigation,
-    Reminder
+    Reminder,
+    TextDetection
 }
 
 [Serializable]

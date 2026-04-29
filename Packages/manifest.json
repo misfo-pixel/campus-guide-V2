@@ -1,9 +1,10 @@
 {
   "dependencies": {
     "com.meta.xr.sdk.all": "201.0.0",
-    "com.unity.inputsystem": "1.17.0",
+    "com.unity.inputsystem": "1.18.0",
+    "com.unity.mobile.android-logcat": "1.4.7",
     "com.unity.multiplayer.center": "1.0.1",
-    "com.unity.test-framework": "1.4.5",
+    "com.unity.test-framework": "1.6.0",
     "com.unity.xr.management": "4.5.4",
     "com.unity.xr.openxr": "1.16.1",
     "com.unity.modules.accessibility": "1.0.0",

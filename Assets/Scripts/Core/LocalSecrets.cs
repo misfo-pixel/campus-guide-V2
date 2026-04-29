@@ -4,10 +4,10 @@ using UnityEngine;
 [Serializable]
 public class LocalSecrets
 {
-    public string azureOpenAIApiKey;
-    public string azureOpenAIResponsesEndpoint;
-    public string azureOpenAITranscriptionEndpoint;
-    public string azureOpenAISpeechEndpoint;
+        public string azureOpenAIApiKey = "";
+    public string azureOpenAIResponsesEndpoint ="";
+    public string azureOpenAITranscriptionEndpoint="";
+    public string azureOpenAISpeechEndpoint="";
 
     private static LocalSecrets cached;
 

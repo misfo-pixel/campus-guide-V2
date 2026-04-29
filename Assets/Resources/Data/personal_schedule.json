@@ -18,9 +18,29 @@
       "title": "CSCI Lecture",
       "building_id": "keller_hall",
       "room_id": "keller_3_180",
-      "start_time": "2026-04-05T14:00:00",
-      "end_time": "2026-04-05T15:15:00",
-      "summary": "Your next class is in Keller Hall room 3-180."
+      "start_time": "2026-04-27T14:00:00",
+      "end_time": "2026-04-27T15:15:00",
+      "summary": "Your CSCI class is in Keller Hall room 3-180."
+    },
+    {
+      "item_id": "class_002",
+      "type": "class",
+      "title": "MATH 5629 - Applied Mathematics",
+      "building_id": "lind_hall",
+      "room_id": "lind_215",
+      "start_time": "2026-04-27T11:00:00",
+      "end_time": "2026-04-27T12:15:00",
+      "summary": "Your Applied Mathematics class is in Lind Hall room 215."
+    },
+    {
+      "item_id": "class_003",
+      "type": "class",
+      "title": "STAT 3021 - Introduction to Probability",
+      "building_id": "lind_hall",
+      "room_id": "lind_305",
+      "start_time": "2026-04-27T13:00:00",
+      "end_time": "2026-04-27T13:50:00",
+      "summary": "Your Statistics class is in Lind Hall room 305."
     },
     {
       "item_id": "office_hours_001",
@@ -28,9 +48,19 @@
       "title": "Professor Office Hours",
       "building_id": "keller_hall",
       "room_id": "keller_lobby",
-      "start_time": "2026-04-05T16:00:00",
-      "end_time": "2026-04-05T17:00:00",
+      "start_time": "2026-04-27T16:00:00",
+      "end_time": "2026-04-27T17:00:00",
       "summary": "Office hours are later this afternoon in Keller Hall."
+    },
+    {
+      "item_id": "office_hours_002",
+      "type": "office_hours",
+      "title": "Math TA Office Hours",
+      "building_id": "lind_hall",
+      "room_id": "lind_409",
+      "start_time": "2026-04-27T15:00:00",
+      "end_time": "2026-04-27T16:00:00",
+      "summary": "Math TA office hours in Lind Hall room 409."
     }
   ],
   "upcoming_tasks": [

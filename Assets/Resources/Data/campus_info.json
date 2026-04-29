@@ -53,6 +53,71 @@
       ]
     },
     {
+      "building_id": "lind_hall",
+      "name": "Lind Hall",
+      "aliases": [
+        "Lind",
+        "Lind Hall",
+        "Lind Hall UMN"
+      ],
+      "campus_area": "East Bank",
+      "category": "Academic Building",
+      "description": "Home to the School of Mathematics and the Institute for Mathematics and its Applications. Houses classrooms, faculty offices, and study spaces for math and related disciplines.",
+      "common_uses": [
+        "Mathematics lectures",
+        "Statistics classes",
+        "Faculty office hours",
+        "Study groups"
+      ],
+      "info_points": [
+        {
+          "zone_id": "lind_hall_entrance",
+          "title": "Lind Hall",
+          "description": "You are at Lind Hall, home of the School of Mathematics.",
+          "semantic_label": "building entrance"
+        },
+        {
+          "zone_id": "lind_hall_corridor",
+          "title": "Lind Hall Corridor",
+          "description": "You are in the main corridor of Lind Hall near classrooms and offices.",
+          "semantic_label": "hallway near classrooms"
+        }
+      ],
+      "rooms": [
+        {
+          "room_id": "lind_215",
+          "room_name": "215",
+          "type": "Classroom",
+          "description": "A medium-sized classroom used for math and statistics lectures.",
+          "notes": [
+            "Seats approximately 60 students.",
+            "Has a projector and whiteboard."
+          ]
+        },
+        {
+          "room_id": "lind_305",
+          "room_name": "305",
+          "type": "Classroom",
+          "description": "A smaller classroom used for upper-division math courses and seminars.",
+          "notes": [
+            "Seats approximately 30 students."
+          ]
+        },
+        {
+          "room_id": "lind_409",
+          "room_name": "409",
+          "type": "Seminar Room",
+          "description": "A seminar room used for graduate-level discussions and presentations."
+        },
+        {
+          "room_id": "lind_lobby",
+          "room_name": "Lobby",
+          "type": "Lobby",
+          "description": "Main entrance area with building directory and bulletin boards."
+        }
+      ]
+    },
+    {
       "building_id": "moos_tower",
       "name": "Moos Tower",
       "aliases": [
@@ -92,6 +157,20 @@
       "location": "Keller Hall",
       "time": "2026-04-08T16:00:00",
       "summary": "A guest speaker event for students interested in AI and systems."
+    },
+    {
+      "event_id": "math_colloquium_01",
+      "title": "Mathematics Colloquium: Applied Topology",
+      "location": "Lind Hall 305",
+      "time": "2026-04-27T15:30:00",
+      "summary": "Weekly math colloquium talk on applied topology in data science. Open to all students."
+    },
+    {
+      "event_id": "ima_seminar_01",
+      "title": "IMA Industrial Problems Seminar",
+      "location": "Lind Hall 409",
+      "time": "2026-04-28T13:00:00",
+      "summary": "Institute for Mathematics and its Applications seminar on optimization in industry."
     },
     {
       "event_id": "student_success_workshop_01",

@@ -26,6 +26,12 @@ public class LLMDemoRunner : MonoBehaviour
     [SerializeField] private float officialFeedWaitTimeoutSeconds = 20f;
     [SerializeField] private bool verboseLogging = false;
 
+    /// <summary>Fired when the LLM returns a successful response.</summary>
+    public event System.Action<LLMActionResult> OnLLMResponseSuccess;
+
+    /// <summary>Fired when the LLM request fails.</summary>
+    public event System.Action<string> OnLLMResponseError;
+
     private readonly List<XRInputDevice> xrDevices = new List<XRInputDevice>();
     private bool isWaitingForOfficialFeed;
     private bool isRequestInFlight;
@@ -92,6 +98,16 @@ public class LLMDemoRunner : MonoBehaviour
             default:
                 return controller.TryGetFeatureValue(XRCommonUsages.primaryButton, out bool primaryPressed) && primaryPressed;
         }
+    }
+
+    /// <summary>
+    /// Resets in-flight flag so a new RunDemo() call can proceed.
+    /// Used by VoiceInputController to ensure voice queries go through.
+    /// </summary>
+    public void CancelCurrentRequest()
+    {
+        isRequestInFlight = false;
+        isWaitingForOfficialFeed = false;
     }
 
     public void RunDemo()
@@ -188,15 +204,18 @@ public class LLMDemoRunner : MonoBehaviour
                     ShowPanel = true
                 };
 
+                worldInfoPanelController.ClearVoiceFeedback();
                 worldInfoPanelController.ApplyState(state);
                 spriteActionController.PlayAction(result.action);
                 TrySpeakReply(result);
+                OnLLMResponseSuccess?.Invoke(result);
             },
             onError: error =>
             {
                 isRequestInFlight = false;
                 Debug.LogError("[LLMDemoRunner] LLM error:\n" + error);
                 worldInfoPanelController.ShowErrorFeedback("Assistant request failed. Please try again.");
+                OnLLMResponseError?.Invoke(error);
             }
         );
     }
