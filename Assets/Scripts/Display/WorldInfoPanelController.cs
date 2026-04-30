@@ -157,13 +157,6 @@ public class WorldInfoPanelController : MonoBehaviour
     public void ClearVoiceFeedback()
     {
         voiceFeedbackState = VoiceFeedbackState.Idle;
-
-        if (lastState != null)
-        {
-            ApplyState(lastState);
-            return;
-        }
-
         ApplyVoiceFeedbackVisuals();
     }
 

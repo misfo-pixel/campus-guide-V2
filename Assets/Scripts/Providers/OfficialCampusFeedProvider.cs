@@ -29,7 +29,7 @@ public class OfficialCampusFeedProvider : MonoBehaviour
     };
 
     [Header("Official UMN Feed")]
-    [SerializeField] private string feedUrl = "https://events.tc.umn.edu/all/feed";
+    [SerializeField] private string feedUrl = "https://events.tc.umn.edu/live/json/events/max/3";
     [SerializeField] private int maxItems = 3;
     [SerializeField] private int timeoutSeconds = 15;
 
@@ -67,10 +67,22 @@ public class OfficialCampusFeedProvider : MonoBehaviour
         }
 
         string xmlText = req.downloadHandler.text;
+        
+        Debug.Log($"[OfficialCampusFeedProvider] Response length: {xmlText?.Length ?? 0}");
+        Debug.Log($"[OfficialCampusFeedProvider] Response start: {xmlText?.Substring(0, Mathf.Min(xmlText?.Length ?? 0, 300))}");
+
         try
         {
-            // Preferred path: parse a real RSS payload with <item><title>...</title></item>.
-            ParseRss(xmlText);
+            // Try JSON first (LiveWhale JSON API)
+            if (xmlText.TrimStart().StartsWith("[") || xmlText.TrimStart().StartsWith("{"))
+            {
+                ParseJson(xmlText);
+            }
+            else
+            {
+                // Preferred path: parse a real RSS payload with <item><title>...</title></item>.
+                ParseRss(xmlText);
+            }
         }
         catch (System.Exception ex)
         {
@@ -97,30 +109,78 @@ public class OfficialCampusFeedProvider : MonoBehaviour
     {
         latestItems.Clear();
 
-        // This fallback only tries to salvage obvious title-like strings from a malformed response.
-        // It is not a trustworthy source of record for event data.
-        MatchCollection titleMatches = Regex.Matches(
+        // UMN's LiveWhale calendar renders event titles inside specific HTML patterns.
+        // Try multiple extraction strategies from most specific to least.
+
+        // Strategy 1: LiveWhale event titles in <a> tags with /event/ URLs
+        MatchCollection eventLinkMatches = Regex.Matches(
             xmlText,
-            @"<title>\s*(.*?)\s*</title>",
+            @"<a[^>]+href=""[^""]*\/event\/[^""]*""[^>]*>\s*(.*?)\s*</a>",
             RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-        for (int i = 0; i < titleMatches.Count && latestItems.Count < maxItems; i++)
+        for (int i = 0; i < eventLinkMatches.Count && latestItems.Count < maxItems; i++)
         {
-            string title = System.Net.WebUtility.HtmlDecode(titleMatches[i].Groups[1].Value).Trim();
+            string title = System.Net.WebUtility.HtmlDecode(
+                Regex.Replace(eventLinkMatches[i].Groups[1].Value, @"<[^>]+>", "")).Trim();
 
-            if (string.IsNullOrWhiteSpace(title))
+            if (!string.IsNullOrWhiteSpace(title) && title.Length >= 8 && title.Length <= 200 &&
+                !LooksLikeGenericPageCopy(title) &&
+                !title.Equals("RSS", System.StringComparison.OrdinalIgnoreCase))
             {
-                continue;
+                latestItems.Add(title);
             }
-
-            if (LooksLikeGenericPageCopy(title) ||
-                title.Equals("RSS", System.StringComparison.OrdinalIgnoreCase))
-            {
-                continue;
-            }
-
-            latestItems.Add(title);
         }
+
+        // Strategy 2: <h3> tags (LiveWhale often uses h3 for event titles)
+        if (latestItems.Count == 0)
+        {
+            MatchCollection h3Matches = Regex.Matches(
+                xmlText,
+                @"<h3[^>]*>\s*(.*?)\s*</h3>",
+                RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+            for (int i = 0; i < h3Matches.Count && latestItems.Count < maxItems; i++)
+            {
+                string heading = System.Net.WebUtility.HtmlDecode(
+                    Regex.Replace(h3Matches[i].Groups[1].Value, @"<[^>]+>", "")).Trim();
+
+                if (!string.IsNullOrWhiteSpace(heading) && heading.Length >= 8 && heading.Length <= 200 &&
+                    !LooksLikeGenericPageCopy(heading))
+                {
+                    latestItems.Add(heading);
+                }
+            }
+        }
+
+        // Strategy 3: <title> tags as last resort (original fallback)
+        if (latestItems.Count == 0)
+        {
+            MatchCollection titleMatches = Regex.Matches(
+                xmlText,
+                @"<title>\s*(.*?)\s*</title>",
+                RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+            for (int i = 0; i < titleMatches.Count && latestItems.Count < maxItems; i++)
+            {
+                string title = System.Net.WebUtility.HtmlDecode(titleMatches[i].Groups[1].Value).Trim();
+
+                if (string.IsNullOrWhiteSpace(title))
+                {
+                    continue;
+                }
+
+                if (LooksLikeGenericPageCopy(title) ||
+                    title.Equals("RSS", System.StringComparison.OrdinalIgnoreCase) ||
+                    title.Length < 8)
+                {
+                    continue;
+                }
+
+                latestItems.Add(title);
+            }
+        }
+
+        Debug.Log($"[OfficialCampusFeedProvider] Fallback parser found {latestItems.Count} items");
     }
 
     private string GetPreview(string text)
@@ -132,6 +192,64 @@ public class OfficialCampusFeedProvider : MonoBehaviour
 
         const int maxPreviewLength = 500;
         return text.Length <= maxPreviewLength ? text : text.Substring(0, maxPreviewLength);
+    }
+
+    /// <summary>
+    /// Parses LiveWhale JSON API response. The response is a JSON array of event objects
+    /// with fields like "title", "date_utc", "location", etc.
+    /// </summary>
+    private void ParseJson(string jsonText)
+    {
+        latestItems.Clear();
+
+        // LiveWhale returns a JSON array: [{"title":"Event Name","date_utc":"...","location":"..."}, ...]
+        // Use regex to extract title fields since Unity's JsonUtility doesn't handle arrays of unknown objects well
+        MatchCollection titleMatches = Regex.Matches(
+            jsonText,
+            @"""title""\s*:\s*""([^""]+)""",
+            RegexOptions.IgnoreCase);
+
+        MatchCollection dateMatches = Regex.Matches(
+            jsonText,
+            @"""date""\s*:\s*""([^""]+)""",
+            RegexOptions.IgnoreCase);
+
+        MatchCollection locationMatches = Regex.Matches(
+            jsonText,
+            @"""location""\s*:\s*""([^""]+)""",
+            RegexOptions.IgnoreCase);
+
+        for (int i = 0; i < titleMatches.Count && latestItems.Count < maxItems; i++)
+        {
+            string title = titleMatches[i].Groups[1].Value.Trim();
+            title = title.Replace("\\u0026", "&").Replace("\\u0027", "'").Replace("\\/", "/");
+
+            if (string.IsNullOrWhiteSpace(title) || LooksLikeGenericPageCopy(title) ||
+                title.StartsWith("Learn more", System.StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            string entry = title;
+
+            // Add date if available
+            if (i < dateMatches.Count)
+            {
+                string date = dateMatches[i].Groups[1].Value.Trim();
+                if (!string.IsNullOrWhiteSpace(date))
+                    entry += " (" + date + ")";
+            }
+
+            // Add location if available
+            if (i < locationMatches.Count)
+            {
+                string location = locationMatches[i].Groups[1].Value.Trim();
+                if (!string.IsNullOrWhiteSpace(location))
+                    entry += " at " + location;
+            }
+
+            latestItems.Add(entry);
+        }
+
+        Debug.Log($"[OfficialCampusFeedProvider] JSON parser found {latestItems.Count} events");
     }
 
     private void ParseRss(string xmlText)

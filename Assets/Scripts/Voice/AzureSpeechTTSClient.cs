@@ -137,9 +137,15 @@ public class AzureSpeechTTSClient : MonoBehaviour
 
         if (!string.IsNullOrWhiteSpace(secrets.azureOpenAISpeechEndpoint))
         {
-            return secrets.azureOpenAISpeechEndpoint;
+            string ep = secrets.azureOpenAISpeechEndpoint.Trim();
+            // If it already contains /audio/speech, use as-is
+            if (ep.Contains("/audio/speech", StringComparison.OrdinalIgnoreCase))
+            {
+                return ep;
+            }
         }
 
+        // Build deployment-based URL: /openai/deployments/{model}/audio/speech?api-version=...
         string baseEndpoint = !string.IsNullOrWhiteSpace(secrets.azureOpenAIResponsesEndpoint)
             ? secrets.azureOpenAIResponsesEndpoint
             : secrets.azureOpenAITranscriptionEndpoint;
@@ -152,7 +158,9 @@ public class AzureSpeechTTSClient : MonoBehaviour
         string trimmed = baseEndpoint.Trim();
         int openAiIndex = trimmed.IndexOf("/openai", StringComparison.OrdinalIgnoreCase);
         string resourceBase = openAiIndex >= 0 ? trimmed.Substring(0, openAiIndex) : trimmed.TrimEnd('/');
-        return resourceBase + "/openai/v1/audio/speech?api-version=preview";
+        string url = resourceBase + "/openai/deployments/" + model + "/audio/speech?api-version=2025-04-01-preview";
+        Debug.Log($"[AzureSpeechTTSClient] Resolved speech endpoint: {url}");
+        return url;
     }
 
     private string BuildRequestBody(string text)
